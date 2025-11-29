@@ -103,12 +103,10 @@ canvas{display:block;margin:0 auto;}
 
 @media(max-width:720px){form.grid{grid-template-columns:1fr}}
 
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 .site-footer {
-  background: var(rgba(11,99,167,0.5),rgba(255,122,45,0.25));       /* matches your theme blue */
-  color: #ffffff;                /* white text for good contrast */
+  background: var(rgba(11,99,167,0.5),rgba(255,122,45,0.25));
+  color: #ffffff;
   padding: 30px 16px;
   font-size: 14px;
   text-align: center;
@@ -122,7 +120,7 @@ canvas{display:block;margin:0 auto;}
 }
 
 .site-footer a {
-  color: var(--text);          /* theme accent color */
+  color: var(--text);
   text-decoration: none;
   font-weight: 500;
   margin: 0 5px;
@@ -132,12 +130,10 @@ canvas{display:block;margin:0 auto;}
   text-decoration: underline;
 }
 
-/* Optional: small responsiveness tweak */
 @media(max-width:600px){
   .site-footer { font-size: 13px; }
   .site-footer p { margin: 8px 0; }
 }
-
 </style>
 </head>
 <body>
@@ -221,14 +217,17 @@ canvas{display:block;margin:0 auto;}
       <p>SpO₂</p>
       <div class="description" id="spo2Desc">—</div>
     </div>
+    <div class="metric">
+      <canvas id="muscleGauge" width="180" height="100"></canvas>
+      <h3 id="muscleText">—</h3>
+      <p>Masse Musculaire (kg)</p>
+      <div class="description" id="muscleDesc">—</div>
+    </div>
   </div>
 </section>
 
 </div>
 
-<!-- =========================
-     FOOTER
-========================= -->
 <footer class="site-footer">
   <div class="footer-content">
     <p>&copy; 2025 Este Essaouira Sports Club. Tous droits réservés.</p>
@@ -236,19 +235,17 @@ canvas{display:block;margin:0 auto;}
       Contact : 
       <a href="mailto:info@esteclub.com">info@esteclub.com</a> | 
       <a href="https://instagram.com/club_sportifeste" target="_blank">Instagram</a> | 
-      <a href="https://wa.me/212781467073">whatsapp</a>
+      <a href="https://wa.me/212781467073">WhatsApp</a>
     </p>
     <p>Suivez-nous pour rester informé de nos activités et événements sportifs !</p>
   </div>
 </footer>
-
 
 <script>
 function drawGauge(canvas,value,maxValue,colors,progress=1){
   const ctx=canvas.getContext('2d');
   const w=canvas.width, h=canvas.height;
   ctx.clearRect(0,0,w,h);
-
   ctx.lineWidth=12;
   ctx.strokeStyle='#eee';
   ctx.beginPath();
@@ -296,6 +293,18 @@ function computeResults(){
   // FC max
   const fcMax=sex==='male'? 220-age : 226-age;
 
+  // Body Fat %
+  let bodyFat = sex==='male'? (1.2*bmi + 0.23*age - 16.2) : (1.2*bmi + 0.23*age - 5.4);
+  bodyFat = Math.max(2, Math.min(60, bodyFat));
+
+  // Muscle proxy
+  let leanMass = weight * (1 - bodyFat/100);
+  let muscleProxy = leanMass * (height / 1.8);
+  let muscleDesc='';
+  if(muscleProxy<40) muscleDesc='Faible';
+  else if(muscleProxy<60) muscleDesc='Moyen';
+  else muscleDesc='Élevé';
+
   // Update text
   document.getElementById('bmiText').innerText=bmi.toFixed(1);
   document.getElementById('bmiDesc').innerText=bmiDesc;
@@ -309,11 +318,15 @@ function computeResults(){
   document.getElementById('spo2Text').innerText=spo2+'%';
   document.getElementById('spo2Desc').innerText=spo2>=95?"Normal":"Attention faible";
 
-  // Animate
+  document.getElementById('muscleText').innerText=muscleProxy.toFixed(1);
+  document.getElementById('muscleDesc').innerText=muscleDesc;
+
+  // Animate gauges
   animateGauge(document.getElementById('bmiGauge'),bmi,40,['#ff7a2d','#fcd34d','#0b63a7']);
   animateGauge(document.getElementById('waistGauge'),waist,120,['#0b63a7','#fcd34d','#ff7a2d']);
   animateGauge(document.getElementById('fcGauge'),fcMax,220,['#0b63a7','#fcd34d','#ff7a2d']);
   animateGauge(document.getElementById('spo2Gauge'),spo2,100,['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('muscleGauge'), muscleProxy, 100, ['#ff7a2d','#fcd34d','#0b63a7']);
 }
 </script>
 </body>
