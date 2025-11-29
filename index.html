@@ -3,270 +3,319 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Analyzer — Este Essaouira Sports Club</title>
+<title>Bilan Santé Simplifié</title>
 <style>
-  :root{
-    --blue:#0b63a7;
-    --orange:#ff7a2d;
-    --bg:#0f1d2c;
-    --text:#090909;
-    --muted:#375b7a;
-    font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;
-  }
+:root{
+  --blue:#0b63a7;
+  --bg:#172a3d;
+  --text:#090909;
+  --muted:#375b7a;
+  font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;
+}
 
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    padding:18px;
-  }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  padding:18px;
+}
 
-  .container{
-    max-width:980px;
-    margin:0 auto;
-    display:grid;
-    gap:24px;
-  }
+.container{
+  max-width:800px;
+  margin:0 auto;
+  display:grid;
+  gap:24px;
+}
 
-  .top-logos{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:40px;
-    flex-wrap:wrap;
-    margin-bottom:24px;
-  }
+.top-logos{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:40px;
+  flex-wrap:wrap;
+}
 
-  .top-logos img{
-    width:120px;
-    height:120px;
-    object-fit:contain;
-  }
+.top-logos img{
+  width:120px;
+  height:120px;
+  object-fit:contain;
+}
 
-  h1{margin:0 0 6px;font-size:28px;color:var(--blue);text-align:center;}
-  p.lead{margin:0;text-align:center;color:var(--muted)}
+h1{text-align:center;color:var(--blue);}
+p.lead{text-align:center;color:var(--muted);}
 
-  .card{
-    background:white;
-    padding:16px;
-    border-radius:12px;
-    box-shadow:0 6px 18px rgba(2,18,42,0.04);
-  }
+.card{
+  background:white;
+  padding:16px;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(2,18,42,0.04);
+}
 
-  form.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-  }
+form.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
 
-  label{
-    display:block;
-    font-weight:600;
-    margin-bottom:6px;
-    color:var(--text);
-  }
+label{font-weight:600;margin-bottom:6px;display:block;}
+input,select{
+  width:90%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #cfdff0;
+  background:#ffffff;
+}
 
-  input, select{
-    width:100%;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid #cfdff0;
-    background:rgb(250, 249, 249);
-    font-size:14px;
-  }
+.full{grid-column:1/-1;}
 
-  .full{grid-column:1/-1}
+button.primary{
+  background:var(--blue);
+  color:white;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+  width:100%;
+}
 
-  button.primary{
-    background:var(--blue);
-    color:white;
-    padding:12px 16px;
-    border-radius:8px;
-    border:none;
-    font-weight:700;
-    cursor:pointer;
-    width:100%;
-  }
+.results{
+  display:flex;
+  gap:24px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
 
-  .results{
-    display:flex;
-    gap:24px;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin-top:12px;
-  }
+.metric{
+  flex:1 1 180px;
+  padding:16px;
+  border-radius:12px;
+  background:white;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(2,18,42,0.04);
+}
 
-  .metric{
-    flex:1 1 180px;
-    padding:16px;
-    border-radius:12px;
-    background:white;
-    text-align:center;
-    box-shadow:0 4px 12px rgba(2,18,42,0.04);
-  }
+.metric h3{margin:12px 0 6px;color:var(--blue);}
+.metric p{margin:6px 0 0;color:#375b7a;}
+.description{margin-top:6px;font-size:13px;color:#7b98b0;}
 
-  .metric h3{margin:12px 0 6px;color:var(--blue);}
-  .metric p{margin:6px 0 0;color:#375b7a;}
-  .description{margin-top:8px;font-size:13px;color:#7b98b0;}
+canvas{display:block;margin:0 auto;}
 
-  canvas{display:block;margin:0 auto;}
+@media(max-width:720px){form.grid{grid-template-columns:1fr}}
 
-  @media(max-width:720px){form.grid{grid-template-columns:1fr}}
+/* =========================
+   FOOTER
+========================= */
+.site-footer {
+  background: var(rgba(11,99,167,0.5),rgba(255,122,45,0.25));       /* matches your theme blue */
+  color: #ffffff;                /* white text for good contrast */
+  padding: 30px 16px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.6;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.05);
+}
+
+.site-footer .footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.site-footer a {
+  color: var(--text);          /* theme accent color */
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0 5px;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Optional: small responsiveness tweak */
+@media(max-width:600px){
+  .site-footer { font-size: 13px; }
+  .site-footer p { margin: 8px 0; }
+}
+
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Logos -->
-  <div class="top-logos">
-    <img src="est.png.png" alt="School Logo" />
-    <img src="club.png" alt="Club Logo" />
-  </div>
-
-  <header>
-    <h1>Analyseur Physique</h1>
-    <p class="lead">Entrez vos informations et obtenez vos résultats animés et interprétation rapide.</p>
-  </header>
-
-  <!-- Form Section -->
-  <section class="card" aria-labelledby="form-title">
-    <h2 id="form-title">Données utilisateur</h2>
-    <form id="analyzeForm" class="grid" onsubmit="event.preventDefault(); computeResults();">
-      <div>
-        <label>Sexe</label>
-        <select id="sex">
-          <option value="male">Homme</option>
-          <option value="female">Femme</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Âge</label>
-        <input id="age" type="number" min="10" max="120" value="25">
-      </div>
-
-      <div>
-        <label>Taille (cm)</label>
-        <input id="height" type="number" min="50" max="250" value="175">
-      </div>
-
-      <div>
-        <label>Poids (kg)</label>
-        <input id="weight" type="number" min="20" max="400" value="75">
-      </div>
-
-      <div class="full">
-        <button type="submit" class="primary">Calculer Résultats</button>
-      </div>
-    </form>
-  </section>
-
-  <!-- Results Section -->
-  <section class="card">
-    <h2>Résultats</h2>
-    <div class="results">
-      <div class="metric">
-        <canvas id="bmiGauge" width="180" height="100"></canvas>
-        <h3 id="bmiText">—</h3>
-        <p>BMI</p>
-        <div class="description" id="bmiDesc">—</div>
-      </div>
-      <div class="metric">
-        <canvas id="bodyFatGauge" width="180" height="100"></canvas>
-        <h3 id="bodyFatText">—</h3>
-        <p>% Masse Grasse</p>
-        <div class="description" id="bodyFatDesc">—</div>
-      </div>
-      <div class="metric">
-        <canvas id="muscleGauge" width="180" height="100"></canvas>
-        <h3 id="muscleText">—</h3>
-        <p>Masse Musculaire (proxy)</p>
-        <div class="description" id="muscleDesc">—</div>
-      </div>
-    </div>
-  </section>
+<!-- Logos -->
+<div class="top-logos">
+  <img src="est.png.png" alt="School Logo">
+  <img src="club.png" alt="Club Logo">
 </div>
+
+<header>
+  <h1>Bilan Santé Simplifié</h1>
+  <p class="lead">Entrez vos données pour obtenir vos indicateurs principaux.</p>
+</header>
+
+<section class="card">
+  <h2>Données à saisir</h2>
+  <form id="healthForm" class="grid" onsubmit="event.preventDefault(); computeResults();">
+    <div>
+      <label>Sexe</label>
+      <select id="sex">
+        <option value="male">Homme</option>
+        <option value="female">Femme</option>
+      </select>
+    </div>
+    <div>
+      <label>Âge</label>
+      <input id="age" type="number" min="10" max="120" value="25">
+    </div>
+    <div>
+      <label>Fréquence cardiaque repos (bpm)</label>
+      <input id="fcRepos" type="number" min="30" max="200" value="70">
+    </div>
+    <div>
+      <label>Saturation en oxygène SpO₂ (%)</label>
+      <input id="spo2" type="number" min="50" max="100" value="98">
+    </div>
+    <div>
+      <label>Poids (kg)</label>
+      <input id="weight" type="number" min="20" max="400" value="70">
+    </div>
+    <div>
+      <label>Taille (m)</label>
+      <input id="height" type="number" step="0.01" min="0.5" max="2.5" value="1.75">
+    </div>
+    <div>
+      <label>Tour de taille (cm)</label>
+      <input id="waist" type="number" min="40" max="200" value="80">
+    </div>
+    <div class="full">
+      <button type="submit" class="primary">Calculer Résultats</button>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Résultats</h2>
+  <div class="results">
+    <div class="metric">
+      <canvas id="bmiGauge" width="180" height="100"></canvas>
+      <h3 id="bmiText">—</h3>
+      <p>IMC</p>
+      <div class="description" id="bmiDesc">—</div>
+    </div>
+    <div class="metric">
+      <canvas id="waistGauge" width="180" height="100"></canvas>
+      <h3 id="waistText">—</h3>
+      <p>Obésité Androïde</p>
+      <div class="description" id="waistDesc">—</div>
+    </div>
+    <div class="metric">
+      <canvas id="fcGauge" width="180" height="100"></canvas>
+      <h3 id="fcText">—</h3>
+      <p>FC max</p>
+      <div class="description" id="fcDesc">—</div>
+    </div>
+    <div class="metric">
+      <canvas id="spo2Gauge" width="180" height="100"></canvas>
+      <h3 id="spo2Text">—</h3>
+      <p>SpO₂</p>
+      <div class="description" id="spo2Desc">—</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- =========================
+     FOOTER
+========================= -->
+<footer class="site-footer">
+  <div class="footer-content">
+    <p>&copy; 2025 Este Essaouira Sports Club. Tous droits réservés.</p>
+    <p>
+      Contact : 
+      <a href="mailto:info@esteclub.com">info@esteclub.com</a> | 
+      <a href="https://instagram.com/club_sportifeste" target="_blank">Instagram</a> | 
+      <a href="https://wa.me/212781467073">whatsapp</a>
+    </p>
+    <p>Suivez-nous pour rester informé de nos activités et événements sportifs !</p>
+  </div>
+</footer>
+
+
 <script>
-function drawGauge(canvas, value, maxValue, gradientColors, progress=1){
-  const ctx = canvas.getContext('2d');
-  const w = canvas.width;
-  const h = canvas.height;
+function drawGauge(canvas,value,maxValue,colors,progress=1){
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width, h=canvas.height;
   ctx.clearRect(0,0,w,h);
 
-  // Background arc
-  ctx.lineWidth = 12;
-  ctx.strokeStyle = '#eee';
+  ctx.lineWidth=12;
+  ctx.strokeStyle='#eee';
   ctx.beginPath();
-  ctx.arc(w/2, h, w/2 - 12, Math.PI, 0, false);
+  ctx.arc(w/2,h,w/2-12,Math.PI,0,false);
   ctx.stroke();
 
-  // Colored arc
-  const grad = ctx.createLinearGradient(0,0,w,0);
-  for(let i=0; i<gradientColors.length; i++){
-    grad.addColorStop(i/(gradientColors.length-1), gradientColors[i]);
-  }
-  ctx.strokeStyle = grad;
+  const grad=ctx.createLinearGradient(0,0,w,0);
+  colors.forEach((c,i)=>grad.addColorStop(i/(colors.length-1),c));
+  ctx.strokeStyle=grad;
 
-  const endAngle = Math.PI + (value/maxValue)*Math.PI * progress;
+  const endAngle=Math.PI + (value/maxValue)*Math.PI*progress;
   ctx.beginPath();
-  ctx.arc(w/2, h, w/2 - 12, Math.PI, endAngle, false);
+  ctx.arc(w/2,h,w/2-12,Math.PI,endAngle,false);
   ctx.stroke();
 }
 
-function animateGauge(canvas, value, maxValue, gradientColors, duration=1000){
-  let start = null;
-  function step(timestamp){
-    if(!start) start = timestamp;
-    const elapsed = timestamp - start;
-    const progress = Math.min(elapsed/duration,1);
-    drawGauge(canvas, value, maxValue, gradientColors, progress);
-    if(progress<1) requestAnimationFrame(step);
+function animateGauge(canvas,value,maxValue,colors,duration=1000){
+  let start=null;
+  function step(ts){
+    if(!start) start=ts;
+    const elapsed=ts-start;
+    const prog=Math.min(elapsed/duration,1);
+    drawGauge(canvas,value,maxValue,colors,prog);
+    if(prog<1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
 function computeResults(){
-  const weight = Number(document.getElementById('weight').value);
-  const height = Number(document.getElementById('height').value);
-  const age = Number(document.getElementById('age').value);
-  const sex = document.getElementById('sex').value;
+  const sex=document.getElementById('sex').value;
+  const age=+document.getElementById('age').value;
+  const weight=+document.getElementById('weight').value;
+  const height=+document.getElementById('height').value;
+  const waist=+document.getElementById('waist').value;
+  const fcRepos=+document.getElementById('fcRepos').value;
+  const spo2=+document.getElementById('spo2').value;
 
-  const heightM = height/100;
-  const bmi = weight / (heightM*heightM);
+  // IMC
+  const bmi=weight/(height*height);
+  let bmiDesc=bmi<18.5?"Insuffisance pondérale":bmi<25?"Corpulence normale":bmi<30?"Surpoids":"Obésité";
 
-  let bmiDesc = '';
-  if(bmi < 18.5) bmiDesc = 'Maigreur';
-  else if(bmi < 25) bmiDesc = 'Normal';
-  else if(bmi < 30) bmiDesc = 'Surpoids';
-  else bmiDesc = 'Obésité';
+  // Obésité androïde
+  const waistStatus=(sex==='male'&&waist>102)||(sex==='female'&&waist>88)?"Oui":"Non";
 
-  let bodyFat = sex==='male'? (1.2*bmi + 0.23*age - 16.2) : (1.2*bmi + 0.23*age - 5.4);
-  bodyFat = Math.max(2, Math.min(60, bodyFat));
-  let bodyFatDesc = '';
-  if(bodyFat<15) bodyFatDesc='Très faible'; 
-  else if(bodyFat<25) bodyFatDesc='Normal';
-  else if(bodyFat<35) bodyFatDesc='Élevé';
-  else bodyFatDesc='Très élevé';
+  // FC max
+  const fcMax=sex==='male'? 220-age : 226-age;
 
-  const leanMass = weight*(1-bodyFat/100);
-  const muscleProxy = leanMass * (height/180);
-  let muscleDesc='';
-  if(muscleProxy<40) muscleDesc='Faible';
-  else if(muscleProxy<60) muscleDesc='Moyen';
-  else muscleDesc='Élevé';
-
+  // Update text
   document.getElementById('bmiText').innerText=bmi.toFixed(1);
   document.getElementById('bmiDesc').innerText=bmiDesc;
-  document.getElementById('bodyFatText').innerText=bodyFat.toFixed(1)+' %';
-  document.getElementById('bodyFatDesc').innerText=bodyFatDesc;
-  document.getElementById('muscleText').innerText=muscleProxy.toFixed(1)+' kg';
-  document.getElementById('muscleDesc').innerText=muscleDesc;
 
-  // Animate gauges
-  animateGauge(document.getElementById('bmiGauge'), bmi, 40, ['#ff7a2d','#fcd34d','#0b63a7']);
-  animateGauge(document.getElementById('bodyFatGauge'), bodyFat, 60, ['#0b63a7','#fcd34d','#ff7a2d']);
-  animateGauge(document.getElementById('muscleGauge'), muscleProxy, 100, ['#ff7a2d','#fcd34d','#0b63a7']);
+  document.getElementById('waistText').innerText=waistStatus;
+  document.getElementById('waistDesc').innerText=waistStatus==="Oui"?"Risque élevé":"Pas de risque";
+
+  document.getElementById('fcText').innerText=fcMax;
+  document.getElementById('fcDesc').innerText="FC max recommandée";
+
+  document.getElementById('spo2Text').innerText=spo2+'%';
+  document.getElementById('spo2Desc').innerText=spo2>=95?"Normal":"Attention faible";
+
+  // Animate
+  animateGauge(document.getElementById('bmiGauge'),bmi,40,['#ff7a2d','#fcd34d','#0b63a7']);
+  animateGauge(document.getElementById('waistGauge'),waist,120,['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('fcGauge'),fcMax,220,['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('spo2Gauge'),spo2,100,['#0b63a7','#fcd34d','#ff7a2d']);
 }
 </script>
 </body>
 </html>
+
