@@ -3,71 +3,80 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Bilan Santé Simplifié</title>
+<title>Bilan Santé Simplifié — Competition</title>
 <style>
 :root{
   --blue:#0b63a7;
   --bg:#172a3d;
   --text:#090909;
   --muted:#375b7a;
+  --card:#ffffff;
+  --danger:#ff4d4f;
   font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;
 }
 
+/* Page layout */
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
   padding:18px;
+  -webkit-font-smoothing:antialiased;
 }
-
 .container{
-  max-width:800px;
+  max-width:900px;
   margin:0 auto;
   display:grid;
-  gap:24px;
+  gap:20px;
 }
 
+/* Logos */
 .top-logos{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap: 1px;
+  gap: 12px;
   flex-wrap:wrap;
 }
-
 .top-logos img{
-  width: 200px;
-  height: 200px;
+  width:160px;
+  height:160px;
   object-fit:contain;
+  border-radius:12px;
+  background:white;
+  padding:12px;
+  box-shadow:0 8px 20px rgba(2,18,42,0.12);
 }
 
-h1{text-align:center;color:var(--blue);}
-p.lead{text-align:center;color:var(--muted);}
+/* Head */
+h1{text-align:center;color:var(--blue);margin:6px 0;}
+p.lead{text-align:center;color:var(--muted);margin:0 0 6px;}
 
+/* Cards */
 .card{
-  background:white;
+  background:var(--card);
   padding:16px;
   border-radius:12px;
   box-shadow:0 6px 18px rgba(2,18,42,0.04);
 }
 
+/* Form */
 form.grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:12px;
 }
-
-label{font-weight:600;margin-bottom:6px;display:block;}
+label{font-weight:600;margin-bottom:6px;display:block;color:#0f1724;}
 input,select{
-  width:90%;
+  width:95%;
   padding:10px;
   border-radius:8px;
   border:1px solid #cfdff0;
   background:#ffffff;
+  font-size:14px;
+  box-sizing:border-box;
 }
-
-.full{grid-column:1/-1;}
-
+.full{grid-column:1/-1;display:flex;gap:12px;align-items:center;}
 button.primary{
   background:var(--blue);
   color:white;
@@ -78,256 +87,549 @@ button.primary{
   cursor:pointer;
   width:100%;
 }
+.small{
+  background:transparent;
+  color:var(--blue);
+  padding:10px;
+  border-radius:8px;
+  border:1px dashed var(--muted);
+  cursor:pointer;
+}
 
+/* Results / metrics */
 .results{
   display:flex;
-  gap:24px;
+  gap:18px;
   flex-wrap:wrap;
   justify-content:center;
 }
-
 .metric{
   flex:1 1 180px;
   padding:16px;
   border-radius:12px;
-  background:white;
+  background:var(--card);
   text-align:center;
   box-shadow:0 4px 12px rgba(2,18,42,0.04);
 }
-
 .metric h3{margin:12px 0 6px;color:var(--blue);}
 .metric p{margin:6px 0 0;color:#375b7a;}
 .description{margin-top:6px;font-size:13px;color:#7b98b0;}
 
 canvas{display:block;margin:0 auto;}
 
-@media(max-width:720px){form.grid{grid-template-columns:1fr}}
+/* Notifications area (placed under results) */
+.notifications {
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  pointer-events:none;
+  width:100%;
+}
+.notification-card{
+  width:100%;
+  max-width:640px;
+  background:linear-gradient(180deg,#ffffff,#f8fbff);
+  border-radius:10px;
+  padding:12px 14px;
+  box-shadow:0 10px 30px rgba(2,18,42,0.12);
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .35s ease, transform .35s ease;
+  pointer-events:auto;
+}
+.notification-card.show{opacity:1; transform:translateY(0);}
+.notification-card .title{font-weight:700;color:var(--blue);margin-bottom:6px;}
+.notification-card .body{font-size:14px;color:#0f1724;}
 
-/* FOOTER */
+/* Footer */
 .site-footer {
-  background: var(rgba(11,99,167,0.5),rgba(255,122,45,0.25));
-  color: #ffffff;
-  padding: 30px 16px;
+  background: linear-gradient(180deg, rgba(11,99,167,0.06), rgba(255,122,45,0.02));
+  color: #0e2130;
+  padding: 22px 16px;
   font-size: 14px;
   text-align: center;
   line-height: 1.6;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,0.05);
+  border-radius:10px;
+  margin-bottom:30px;
 }
+.site-footer a { color: var(--blue); text-decoration:none; font-weight:600; }
+.site-footer p{margin:6px 0;}
 
-.site-footer .footer-content {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.site-footer a {
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 500;
-  margin: 0 5px;
-}
-
-.site-footer a:hover {
-  text-decoration: underline;
-}
-
-@media(max-width:600px){
-  .site-footer { font-size: 13px; }
-  .site-footer p { margin: 8px 0; }
+/* Responsive */
+@media(max-width:720px){
+  form.grid{grid-template-columns:1fr;}
+  .top-logos img{width:120px;height:120px;}
 }
 </style>
 </head>
+
 <body>
 <div class="container">
 
-<!-- Logos -->
-<div class="top-logos">
-  <img src="analyx.png" alt="Club Logo">
-</div>
-
-<header>
-  <h1>Fitness & Performance Analyzer</h1>
-  <p class="lead">Entrez vos données pour obtenir vos indicateurs principaux.</p>
-</header>
-
-<section class="card">
-  <h2>Données à saisir</h2>
-  <form id="healthForm" class="grid" onsubmit="event.preventDefault(); computeResults();">
-    <div>
-      <label>Sexe</label>
-      <select id="sex">
-        <option value="male">Homme</option>
-        <option value="female">Femme</option>
-      </select>
-    </div>
-    <div>
-      <label>Âge</label>
-      <input id="age" type="number" min="10" max="120" placeholder="25">
-    </div>
-    <div>
-      <label>Fréquence cardiaque repos (bpm)</label>
-      <input id="fcRepos" type="number" min="30" max="200" placeholder="70">
-    </div>
-    <div>
-      <label>Saturation en oxygène SpO₂ (%)</label>
-      <input id="spo2" type="number" min="50" max="100" placeholder="98">
-    </div>
-    <div>
-      <label>Poids (kg)</label>
-      <input id="weight" type="number" min="20" max="400" placeholder="70">
-    </div>
-    <div>
-      <label>Taille (m)</label>
-      <input id="height" type="number" step="0.01" min="0.5" max="2.5" placeholder="1,75">
-    </div>
-    <div>
-      <label>Tour de taille (cm)</label>
-      <input id="waist" type="number" min="40" max="200" placeholder="80">
-    </div>
-    <div class="full">
-      <button type="submit" class="primary">Calculer Résultats</button>
-    </div>
-  </form>
-</section>
-
-<section class="card">
-  <h2>Résultats</h2>
-  <div class="results">
-    <div class="metric">
-      <canvas id="bmiGauge" width="180" height="100"></canvas>
-      <h3 id="bmiText">—</h3>
-      <p>IMC</p>
-      <div class="description" id="bmiDesc">—</div>
-    </div>
-    <div class="metric">
-      <canvas id="waistGauge" width="180" height="100"></canvas>
-      <h3 id="waistText">—</h3>
-      <p>Obésité Androïde</p>
-      <div class="description" id="waistDesc">—</div>
-    </div>
-    <div class="metric">
-      <canvas id="fcGauge" width="180" height="100"></canvas>
-      <h3 id="fcText">—</h3>
-      <p>FC max</p>
-      <div class="description" id="fcDesc">—</div>
-    </div>
-    <div class="metric">
-      <canvas id="spo2Gauge" width="180" height="100"></canvas>
-      <h3 id="spo2Text">—</h3>
-      <p>SpO₂</p>
-      <div class="description" id="spo2Desc">—</div>
-    </div>
-    <div class="metric">
-      <canvas id="muscleGauge" width="180" height="100"></canvas>
-      <h3 id="muscleText">—</h3>
-      <p>Masse Musculaire (kg)</p>
-      <div class="description" id="muscleDesc">—</div>
-    </div>
+  <!-- Logo -->
+  <div class="top-logos">
+    <!-- keep image file named analyx.png next to this HTML -->
+    <img src="analyx.png" alt="Club Logo">
   </div>
-</section>
+
+  <header>
+    <h1>Fitness & Performance Analyzer</h1>
+    <p class="lead">Entrez vos données pour obtenir vos indicateurs principaux.</p>
+  </header>
+
+  <!-- Inputs -->
+  <section class="card">
+    <h2>Données à saisir</h2>
+    <form id="healthForm" class="grid" onsubmit="event.preventDefault(); computeResults(true);">
+      <div>
+        <label>Sexe</label>
+        <select id="sex">
+          <option value="male">Homme</option>
+          <option value="female">Femme</option>
+        </select>
+      </div>
+      <div>
+        <label>Âge</label>
+        <input id="age" type="number" min="10" max="120" placeholder="25">
+      </div>
+      <div>
+        <label>Fréquence cardiaque repos (bpm)</label>
+        <input id="fcRepos" type="number" min="30" max="200" placeholder="70">
+      </div>
+      <div>
+        <label>Saturation en oxygène SpO₂ (%)</label>
+        <input id="spo2" type="number" min="50" max="100" placeholder="98">
+      </div>
+      <div>
+        <label>Poids (kg)</label>
+        <input id="weight" type="number" min="20" max="400" placeholder="70">
+      </div>
+      <div>
+        <label>Taille (m)</label>
+        <input id="height" type="number" step="0.01" min="0.5" max="2.5" placeholder="1.75">
+      </div>
+      <div>
+        <label>Tour de taille (cm)</label>
+        <input id="waist" type="number" min="40" max="200" placeholder="80">
+      </div>
+
+      <!-- VMA inputs -->
+      <div>
+        <label>Distance test semi-Cooper 6 min (m) — optionnel</label>
+        <input id="d6" type="number" placeholder="1200">
+      </div>
+      <div>
+        <label>Distance test Cooper 12 min (m) — optionnel</label>
+        <input id="d12" type="number" placeholder="2400">
+      </div>
+
+      <!-- Ruffier inputs -->
+      <div>
+        <label>P1 = FC repos</label>
+        <input id="p1" type="number" placeholder="70">
+      </div>
+      <div>
+        <label>P2 = FC après effort</label>
+        <input id="p2" type="number" placeholder="120">
+      </div>
+      <div>
+        <label>P3 = FC après récupération</label>
+        <input id="p3" type="number" placeholder="85">
+      </div>
+
+      <div class="full">
+        <button type="submit" class="primary">Calculer Résultats</button>
+        <button type="button" class="small" onclick="fillSample(); computeResults(true);">Utiliser données exemple</button>
+        <button type="button" class="small" onclick="clearResults();">Réinitialiser</button>
+      </div>
+      <div class="full" style="color:var(--muted);font-size:13px;">
+        Si des champs sont vides, des valeurs sûres par défaut seront utilisées pour la démonstration.
+      </div>
+    </form>
+  </section>
+
+  <!-- Results -->
+  <section class="card">
+    <h2>Résultats</h2>
+    <div class="results">
+
+      <div class="metric">
+        <canvas id="bmiGauge" width="180" height="100"></canvas>
+        <h3 id="bmiText">—</h3>
+        <p>IMC</p>
+        <div class="description" id="bmiDesc">—</div>
+      </div>
+
+      <div class="metric">
+        <canvas id="waistGauge" width="180" height="100"></canvas>
+        <h3 id="waistText">—</h3>
+        <p>Obésité Androïde</p>
+        <div class="description" id="waistDesc">—</div>
+      </div>
+
+      <div class="metric">
+        <canvas id="fcGauge" width="180" height="100"></canvas>
+        <h3 id="fcText">—</h3>
+        <p>FC max</p>
+        <div class="description" id="fcDesc">—</div>
+      </div>
+
+      <div class="metric">
+        <canvas id="vmaGauge" width="180" height="100"></canvas>
+        <h3 id="vmaText">—</h3>
+        <p>VMA</p>
+        <div class="description" id="vmaDesc">—</div>
+      </div>
+
+      <div class="metric">
+        <canvas id="vo2Gauge" width="180" height="100"></canvas>
+        <h3 id="vo2Text">—</h3>
+        <p>VO₂ max</p>
+        <div class="description" id="vo2Desc">—</div>
+      </div>
+
+      <div class="metric">
+        <canvas id="irGauge" width="180" height="100"></canvas>
+        <h3 id="irText">—</h3>
+        <p>Indice Ruffier-Dickson</p>
+        <div class="description" id="irDesc">—</div>
+      </div>
+
+    </div>
+
+    <!-- Notifications displayed here (under results) -->
+    <div class="notifications" id="notifications"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Este Essaouira Sports Club. Tous droits réservés.</p>
+      <p>
+        Contact : 
+        <a href="mailto:info@esteclub.com">info@esteclub.com</a> | 
+        <a href="https://instagram.com/club_sportifeste" target="_blank">Instagram</a> | 
+        <a href="https://wa.me/212781467073">WhatsApp</a>
+      </p>
+      <p>Suivez-nous pour rester informé de nos activités et événements sportifs !</p>
+    </div>
+  </footer>
 
 </div>
-
-<footer class="site-footer">
-  <div class="footer-content">
-    <p>&copy; 2025 Este Essaouira Sports Club. Tous droits réservés.</p>
-    <p>
-      Contact : 
-      <a href="mailto:info@esteclub.com">info@esteclub.com</a> | 
-      <a href="https://instagram.com/club_sportifeste" target="_blank">Instagram</a> | 
-      <a href="https://wa.me/212781467073">WhatsApp</a>
-    </p>
-    <p>Suivez-nous pour rester informé de nos activités et événements sportifs !</p>
-  </div>
-</footer>
 
 <script>
-function drawGauge(canvas,value,maxValue,colors,progress=1){
-  const ctx=canvas.getContext('2d');
-  const w=canvas.width, h=canvas.height;
+/* ----------------------------
+   Config
+   ---------------------------- */
+// Notification rotation interval (milliseconds).
+// You asked for 13–20s. Change here to 13000 or 20000 if you want.
+// Default set to 15000 (15 seconds).
+const ROTATION_DELAY = 15000;
+
+/* ----------------------------
+   Gauge drawing helpers
+   ---------------------------- */
+function drawGauge(canvas, value, maxValue, colors, progress = 1){
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
   ctx.clearRect(0,0,w,h);
-  ctx.lineWidth=12;
-  ctx.strokeStyle='#eee';
+
+  // background arc
+  ctx.lineWidth = 12;
+  ctx.strokeStyle = '#eee';
   ctx.beginPath();
-  ctx.arc(w/2,h,w/2-12,Math.PI,0,false);
+  ctx.arc(w/2, h, w/2-12, Math.PI, 0, false);
   ctx.stroke();
 
-  const grad=ctx.createLinearGradient(0,0,w,0);
-  colors.forEach((c,i)=>grad.addColorStop(i/(colors.length-1),c));
-  ctx.strokeStyle=grad;
+  // gradient for foreground
+  const grad = ctx.createLinearGradient(0,0,w,0);
+  colors.forEach((c,i) => grad.addColorStop(i/(colors.length-1), c));
+  ctx.strokeStyle = grad;
 
-  const endAngle=Math.PI + (value/maxValue)*Math.PI*progress;
+  const ratio = Math.max(0, Math.min(1, (maxValue === 0 ? 0 : value / maxValue)));
+  const endAngle = Math.PI + ratio * Math.PI * progress;
   ctx.beginPath();
-  ctx.arc(w/2,h,w/2-12,Math.PI,endAngle,false);
+  ctx.arc(w/2, h, w/2-12, Math.PI, endAngle, false);
   ctx.stroke();
 }
 
-function animateGauge(canvas,value,maxValue,colors,duration=1000){
-  let start=null;
+function animateGauge(canvas, value, maxValue, colors, duration = 900){
+  let start = null;
   function step(ts){
-    if(!start) start=ts;
-    const elapsed=ts-start;
-    const prog=Math.min(elapsed/duration,1);
-    drawGauge(canvas,value,maxValue,colors,prog);
-    if(prog<1) requestAnimationFrame(step);
+    if(!start) start = ts;
+    const elapsed = ts - start;
+    const prog = Math.min(1, elapsed / duration);
+    drawGauge(canvas, value, maxValue, colors, prog);
+    if(prog < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
-function computeResults(){
-  const sex=document.getElementById('sex').value;
-  const age=+document.getElementById('age').value;
-  const weight=+document.getElementById('weight').value;
-  const height=+document.getElementById('height').value;
-  const waist=+document.getElementById('waist').value;
-  const fcRepos=+document.getElementById('fcRepos').value;
-  const spo2=+document.getElementById('spo2').value;
+/* ----------------------------
+   Notifications system
+   ---------------------------- */
+const generalMessages = [
+  "Faites au moins 30 minutes d’activité physique par jour.",
+  "Hydratez-vous régulièrement — l'eau est votre meilleure alliée.",
+  "Adoptez une alimentation saine, équilibrée et variée.",
+  "Dormez 7 à 8 heures par nuit pour bien récupérer.",
+  "Faites des pauses actives si vous travaillez assis longtemps.",
+  "Commencez par des objectifs progressifs : 3 séances courtes par semaine."
+];
+
+let rotationInterval = null;
+let rotationIndex = 0;
+
+function showNotification(title, body, priority = false, timeout = 8000){
+  const container = document.getElementById('notifications');
+  const card = document.createElement('div');
+  card.className = 'notification-card';
+  
+  // if priority, put at top; else append at bottom
+  if(priority && container.firstChild){
+    container.insertBefore(card, container.firstChild);
+  } else {
+    container.appendChild(card);
+  }
+
+  // small delay to allow CSS transition
+  setTimeout(() => card.classList.add('show'), 20);
+
+  // remove after timeout
+  setTimeout(() => {
+    card.classList.remove('show');
+    setTimeout(()=> { if(card.parentNode) card.parentNode.removeChild(card); }, 350);
+  }, timeout);
+}
+
+function startRotation(customMessages){
+  // If provided, customMessages is an array of {title,body}
+  if(rotationInterval) clearInterval(rotationInterval);
+  const messages = (customMessages && customMessages.length) ? customMessages :
+    generalMessages.map(m => ({title:'Conseil santé', body:m}));
+
+  // initial tick right away
+  function tick(){
+    const msg = messages[rotationIndex % messages.length];
+    showNotification(msg.title, msg.body, false, Math.max(6000, ROTATION_DELAY - 2000));
+    rotationIndex++;
+  }
+  tick();
+  rotationInterval = setInterval(tick, ROTATION_DELAY);
+}
+
+function stopRotation(){
+  if(rotationInterval) {
+    clearInterval(rotationInterval);
+    rotationInterval = null;
+  }
+}
+
+/* ----------------------------
+   Personalized alerts builder
+   ---------------------------- */
+function makeAlerts(results){
+  const alerts = [];
 
   // IMC
-  const bmi=weight/(height*height);
-  let bmiDesc=bmi<18.5?"Insuffisance pondérale":bmi<25?"Corpulence normale":bmi<30?"Surpoids":"Obésité";
+  if(results.bmi >= 30){
+    alerts.push({title:'Alerte — IMC', body:'Votre IMC indique une obésité. Envisagez un suivi nutritionnel et une activité régulière.'});
+  } else if(results.bmi >= 25){
+    alerts.push({title:'Conseil — IMC', body:'Surpoids détecté : réduisez aliments riches en calories vides et augmentez activité.'});
+  }
 
-  // Obésité androïde
-  const waistStatus=(sex==='male'&&waist>102)||(sex==='female'&&waist>88)?"Oui":"Non";
+  // Tour de taille
+  if(results.waistRisk){
+    alerts.push({title:'Alerte — Tour de taille', body:'Tour de taille élevé — risque cardio. Ciblez perte abdominale via cardio et alimentation.'});
+  }
 
-  // FC max
-  const fcMax=sex==='male'? 220-age : 226-age;
+  // SpO2
+  if(results.spo2 < 95){
+    alerts.push({title:'Alerte — SpO₂', body:'Saturation en oxygène basse. Si persistante, consultez un professionnel de santé.'});
+  }
 
-  // Body Fat %
-  let bodyFat = sex==='male'? (1.2*bmi + 0.23*age - 16.2) : (1.2*bmi + 0.23*age - 5.4);
-  bodyFat = Math.max(2, Math.min(60, bodyFat));
+  // VMA
+  if(results.vma && results.vma < 10){
+    alerts.push({title:'Endurance faible', body:'VMA basse. Initiez entraînements d’endurance progressifs (30–45 min, 3×/sem).'});
+  }
 
-  // Muscle proxy
-  let leanMass = weight * (1 - bodyFat/100);
-  let muscleProxy = leanMass * (height / 1.8);
-  let muscleDesc='';
-  if(muscleProxy<40) muscleDesc='Faible';
-  else if(muscleProxy<60) muscleDesc='Moyen';
-  else muscleDesc='Élevé';
+  // Ruffier
+  if(results.ir > 15){
+    alerts.push({title:'Alerte — Ruffier', body:'Indice Ruffier très faible: évitez efforts intenses sans suivi médical.'});
+  } else if(results.ir > 10){
+    alerts.push({title:'Ruffier — Moyen', body:'Récupération à améliorer : travail progressif et repos.'});
+  }
 
-  // Update text
-  document.getElementById('bmiText').innerText=bmi.toFixed(1);
-  document.getElementById('bmiDesc').innerText=bmiDesc;
+  if(alerts.length === 0){
+    alerts.push({title:'Bravo 👍', body:'Vos indicateurs principaux sont dans la norme. Continuez ainsi !'});
+  }
 
-  document.getElementById('waistText').innerText=waistStatus;
-  document.getElementById('waistDesc').innerText=waistStatus==="Oui"?"Risque élevé":"Pas de risque";
-
-  document.getElementById('fcText').innerText=fcMax;
-  document.getElementById('fcDesc').innerText="FC max recommandée";
-
-  document.getElementById('spo2Text').innerText=spo2+'%';
-  document.getElementById('spo2Desc').innerText=spo2>=95?"Normal":"Attention faible";
-
-  document.getElementById('muscleText').innerText=muscleProxy.toFixed(1);
-  document.getElementById('muscleDesc').innerText=muscleDesc;
-
-  // Animate gauges
-  animateGauge(document.getElementById('bmiGauge'),bmi,40,['#ff7a2d','#fcd34d','#0b63a7']);
-  animateGauge(document.getElementById('waistGauge'),waist,120,['#0b63a7','#fcd34d','#ff7a2d']);
-  animateGauge(document.getElementById('fcGauge'),fcMax,220,['#0b63a7','#fcd34d','#ff7a2d']);
-  animateGauge(document.getElementById('spo2Gauge'),spo2,100,['#0b63a7','#fcd34d','#ff7a2d']);
-  animateGauge(document.getElementById('muscleGauge'), muscleProxy, 100, ['#ff7a2d','#fcd34d','#0b63a7']);
+  return alerts;
 }
+
+/* ----------------------------
+   Main compute function (all formulas from PDF)
+   ---------------------------- */
+function computeResults(showNotificationsAfterCompute = true){
+  // Gather inputs with safe defaults if empty
+  const sex = (document.getElementById('sex').value) || 'male';
+  const age = Number(document.getElementById('age').value) || 25;
+  const fcRepos = Number(document.getElementById('fcRepos').value) || 70;
+  const spo2 = Number(document.getElementById('spo2').value) || 98;
+  const weight = Number(document.getElementById('weight').value) || 70;
+  const height = Number(document.getElementById('height').value) || 1.75;
+  const waist = Number(document.getElementById('waist').value) || 80;
+  const d6 = Number(document.getElementById('d6').value) || 0;
+  const d12 = Number(document.getElementById('d12').value) || 0;
+  const p1 = Number(document.getElementById('p1').value) || fcRepos;
+  const p2 = Number(document.getElementById('p2').value) || (fcRepos + 50);
+  const p3 = Number(document.getElementById('p3').value) || Math.round((fcRepos + p2) / 2);
+
+  // 1) IMC
+  const bmi = +(weight / (height * height));
+  const bmiLabel = bmi < 18.5 ? "Insuffisance pondérale" : bmi < 25 ? "Corpulence normale" : bmi < 30 ? "Surpoids" : "Obésité";
+
+  // 2) Obésité androïde
+  const waistRisk = (sex === 'male' && waist > 102) || (sex === 'female' && waist > 88);
+
+  // 3) FC max
+  const fcMax = sex === 'male' ? 220 - age : 226 - age;
+
+  // 4) VMA
+  let vma = 0;
+  let vmaMethod = 'Aucun test fourni';
+  if(d12 > 0){ vma = +(d12 / 200); vmaMethod = 'Cooper 12 min'; }
+  else if(d6 > 0){ vma = +(d6 / 100); vmaMethod = 'Semi-Cooper 6 min'; }
+  vma = +vma.toFixed(1);
+  const vmaLabel = vma === 0 ? 'Aucun test' : vma < 10 ? 'Faible' : vma <= 13 ? 'Moyenne' : vma <= 17 ? 'Bonne' : 'Excellente';
+
+  // 5) VO2max
+  const vo2 = vma > 0 ? +(3.46 * vma + 12.2).toFixed(1) : 0;
+  const vo2Label = vo2 === 0 ? 'Aucun test' : vo2 < 35 ? 'Faible' : vo2 <= 45 ? 'Moyenne' : vo2 <= 55 ? 'Bonne' : 'Excellente';
+
+  // 6) Ruffier-Dickson IR
+  const ir = +(((p1 + p2 + p3) - 200) / 10).toFixed(1);
+  const irLabel = ir <= 5 ? 'Très bonne adaptation cardiovasculaire' : ir <= 10 ? 'Moyenne' : ir <= 15 ? 'Faible' : 'Très faible';
+
+  // Update DOM values
+  document.getElementById('bmiText').innerText = isFinite(bmi) ? bmi.toFixed(1) : '—';
+  document.getElementById('bmiDesc').innerText = isFinite(bmi) ? bmiLabel : '—';
+
+  document.getElementById('waistText').innerText = waist ? (waist + ' cm — ' + (waistRisk ? 'Risque' : 'Pas de risque')) : '—';
+  document.getElementById('waistDesc').innerText = waist ? (waistRisk ? 'Obésité androïde' : 'Tour de taille normal') : '—';
+
+  document.getElementById('fcText').innerText = isFinite(fcMax) ? (fcMax + ' bpm') : '—';
+  document.getElementById('fcDesc').innerText = 'FC max recommandée';
+
+  document.getElementById('vmaText').innerText = vma ? (vma + ' km/h') : '—';
+  document.getElementById('vmaDesc').innerText = vma ? (vmaMethod + ' — ' + vmaLabel) : '—';
+
+  document.getElementById('vo2Text').innerText = vo2 ? (vo2 + ' ml/kg/min') : '—';
+  document.getElementById('vo2Desc').innerText = vo2 ? vo2Label : '—';
+
+  document.getElementById('irText').innerText = isFinite(ir) ? ir : '—';
+  document.getElementById('irDesc').innerText = isFinite(ir) ? irLabel : '—';
+
+  // Animate gauges (safe max values)
+  animateGauge(document.getElementById('bmiGauge'), isFinite(bmi) ? bmi : 0, 40, ['#ff7a2d','#fcd34d','#0b63a7']);
+  animateGauge(document.getElementById('waistGauge'), waist || 0, 140, ['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('fcGauge'), fcMax || 0, 220, ['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('vmaGauge'), vma || 0, 25, ['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('vo2Gauge'), vo2 || 0, 80, ['#ff7a2d','#fcd34d','#0b63a7']);
+  animateGauge(document.getElementById('irGauge'), Math.max(0, isFinite(ir) ? ir : 0), 25, ['#ff7a2d','#fcd34d','#0b63a7']);
+
+  // Build results object for alerts/rotation
+  const results = {
+    bmi: isFinite(bmi) ? bmi : 0,
+    waistRisk,
+    spo2: spo2 || 0,
+    vma: vma || 0,
+    vo2: vo2 || 0,
+    ir: isFinite(ir) ? ir : 0
+  };
+
+  // Priority alerts
+  const alerts = makeAlerts(results);
+
+  // Show immediate priority alerts (max 3)
+  if(showNotificationsAfterCompute){
+    alerts.slice(0,3).forEach(a => showNotification(a.title, a.body, true, 9000));
+  }
+
+  // Prepare rotation: place alerts first then general messages
+  const rotationMessages = alerts.concat(generalMessages.map(m => ({title:'Conseil santé', body:m})));
+  startRotation(rotationMessages);
+
+  // Confirm to user
+  showNotification('Calcul terminé', 'Les indicateurs ont été mis à jour.', false, 5000);
+}
+
+/* ----------------------------
+   Sample + reset helpers
+   ---------------------------- */
+function fillSample(){
+  document.getElementById('sex').value='male';
+  document.getElementById('age').value='22';
+  document.getElementById('fcRepos').value='62';
+  document.getElementById('spo2').value='98';
+  document.getElementById('weight').value='72';
+  document.getElementById('height').value='1.78';
+  document.getElementById('waist').value='82';
+  document.getElementById('d6').value='1400';
+  document.getElementById('d12').value='';
+  document.getElementById('p1').value='62';
+  document.getElementById('p2').value='135';
+  document.getElementById('p3').value='88';
+}
+
+function clearResults(){
+  // Clear text fields (not inputs) and stop rotation & notifications
+  document.getElementById('bmiText').innerText='—';
+  document.getElementById('bmiDesc').innerText='—';
+  document.getElementById('waistText').innerText='—';
+  document.getElementById('waistDesc').innerText='—';
+  document.getElementById('fcText').innerText='—';
+  document.getElementById('fcDesc').innerText='—';
+  document.getElementById('vmaText').innerText='—';
+  document.getElementById('vmaDesc').innerText='—';
+  document.getElementById('vo2Text').innerText='—';
+  document.getElementById('vo2Desc').innerText='—';
+  document.getElementById('irText').innerText='—';
+  document.getElementById('irDesc').innerText='—';
+
+  stopRotation();
+  const container = document.getElementById('notifications');
+  container.innerHTML = '';
+}
+
+function showNotification(title, body, timeout = 8000){
+    const container = document.getElementById('notifications');
+    const card = document.createElement('div');
+    card.className = 'notification-card small';
+    card.innerHTML = '<div class="title">' + title + '</div><div class="body">' + body + '</div>';
+
+    container.appendChild(card);
+
+    // Trigger fade-in after 50ms
+    setTimeout(() => card.classList.add('show'),50);
+
+    // Trigger fade-out after "timeout"
+    setTimeout(() => {
+        card.classList.remove('show');
+        // Remove element after transition ends (450ms)
+        setTimeout(() => {
+            if (card.parentNode) container.removeChild(card);
+        },5450);
+    }, timeout);
+}
+/* ----------------------------
+   Initial start
+   ---------------------------- */
+showNotification('Bienvenue', 'Entrez vos données ou cliquez sur "Utiliser données exemple" puis "Calculer".', false, 6000);
+startRotation(); // start rotating generic messages
+
 </script>
 </body>
 </html>
-
