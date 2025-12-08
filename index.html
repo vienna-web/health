@@ -7,7 +7,7 @@
 <style>
 :root{
   --blue:#0b63a7;
-  --bg:#172a3d;
+  --bg:#172a3d ;
   --text:#090909;
   --muted:#375b7a;
   --card:#ffffff;
@@ -42,11 +42,22 @@ body{
   width:160px;
   height:160px;
   object-fit:contain;
-  border-radius:12px;
-  background:white;
-  padding:12px;
-  box-shadow:0 8px 20px rgba(2,18,42,0.12);
+  border-radius:50%;
+  background:transparent;
+  padding:0;
+  box-shadow:0 18px 40px rgba(2,18,42,0.18);
+  transition:transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s;
+  transform-origin:center center;
+  animation:floaty 6s ease-in-out infinite;
 }
+
+@keyframes floaty{
+  0%{ transform:translateY(0) rotate(-1deg); }
+  50%{ transform:translateY(-8px) rotate(1.2deg); }
+  100%{ transform:translateY(0) rotate(-1deg); }
+}
+
+.top-logos img:hover{ transform:scale(1.06) rotate(0.5deg); box-shadow:0 28px 60px rgba(2,18,42,0.22);} 
 
 /* Head */
 h1{text-align:center;color:var(--blue);margin:6px 0;}
@@ -135,13 +146,34 @@ canvas{display:block;margin:0 auto;}
   padding:12px 14px;
   box-shadow:0 10px 30px rgba(2,18,42,0.12);
   opacity:0;
-  transform:translateY(8px);
-  transition:opacity .35s ease, transform .35s ease;
+  transform:translateY(8px) scale(.98);
+  transition:opacity .35s cubic-bezier(.2,.9,.3,1), transform .45s cubic-bezier(.2,.9,.3,1);
   pointer-events:auto;
 }
 .notification-card.show{opacity:1; transform:translateY(0);}
 .notification-card .title{font-weight:700;color:var(--blue);margin-bottom:6px;}
 .notification-card .body{font-size:14px;color:#0f1724;}
+
+/* priority / alert styling */
+.notification-card.priority{ border-left:6px solid rgba(255,77,79,0.92); box-shadow:0 18px 44px rgba(255,77,79,0.06); }
+.notification-card.priority .title{color:#b92b2b;}
+
+/* subtle pop when showing */
+.notification-card.show{ animation:pop-in .42s cubic-bezier(.2,.9,.3,1); }
+@keyframes pop-in{
+  0%{ opacity:0; transform:translateY(10px) scale(.98); }
+  70%{ opacity:1; transform:translateY(-4px) scale(1.02); }
+  100%{ opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* Animated results card when notifications are present */
+#resultsCard{ transition:padding .45s cubic-bezier(.2,.9,.3,1), border-radius .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s; overflow:visible; }
+#resultsCard.notifications-visible{ padding-bottom:44px; border-radius:16px; box-shadow:0 14px 36px rgba(2,18,42,0.08); }
+#resultsCard .results .metric{ transition:transform .45s cubic-bezier(.2,.9,.3,1), opacity .35s ease; }
+#resultsCard.notifications-visible .results .metric{ transform:translateY(-8px) scale(1.01); }
+
+/* disabled input visual when palier selected */
+.input-muted{ opacity:0.45; }
 
 /* Footer */
 .site-footer {
@@ -188,6 +220,32 @@ canvas{display:block;margin:0 auto;}
         <select id="sex">
           <option value="male">Homme</option>
           <option value="female">Femme</option>
+        </select>
+      </div>
+      <div>
+        <label>Palier (test palier)</label>
+        <select id="palier">
+          <option value="">Aucun</option>
+          <option value="1">Palier 1</option>
+          <option value="2">Palier 2</option>
+          <option value="3">Palier 3</option>
+          <option value="4">Palier 4</option>
+          <option value="5">Palier 5</option>
+          <option value="6">Palier 6</option>
+          <option value="7">Palier 7</option>
+          <option value="8">Palier 8</option>
+          <option value="9">Palier 9</option>
+          <option value="10">Palier 10</option>
+          <option value="11">Palier 11</option>
+          <option value="12">Palier 12</option>
+          <option value="13">Palier 13</option>
+          <option value="14">Palier 14</option>
+          <option value="15">Palier 15</option>
+          <option value="16">Palier 16</option>
+          <option value="17">Palier 17</option>
+          <option value="18">Palier 18</option>
+          <option value="19">Palier 19</option>
+          <option value="20">Palier 20</option>
         </select>
       </div>
       <div>
@@ -251,7 +309,7 @@ canvas{display:block;margin:0 auto;}
   </section>
 
   <!-- Results -->
-  <section class="card">
+  <section id="resultsCard" class="card">
     <h2>Résultats</h2>
     <div class="results">
 
@@ -325,8 +383,8 @@ canvas{display:block;margin:0 auto;}
    ---------------------------- */
 // Notification rotation interval (milliseconds).
 // You asked for 13–20s. Change here to 13000 or 20000 if you want.
-// Default set to 15000 (15 seconds).
-const ROTATION_DELAY = 15000;
+// Default set to 20000 (20 seconds) to give more cooldown between messages.
+const ROTATION_DELAY = 20000;
 
 /* ----------------------------
    Gauge drawing helpers
@@ -385,23 +443,25 @@ let rotationIndex = 0;
 function showNotification(title, body, priority = false, timeout = 8000){
   const container = document.getElementById('notifications');
   const card = document.createElement('div');
-  card.className = 'notification-card';
-  
-  // if priority, put at top; else append at bottom
+  card.className = 'notification-card' + (priority ? ' priority' : '');
+  card.innerHTML = '<div class="title">' + title + '</div><div class="body">' + body + '</div>';
+
+  // place priority at top, others appended
   if(priority && container.firstChild){
     container.insertBefore(card, container.firstChild);
   } else {
     container.appendChild(card);
   }
 
-  // small delay to allow CSS transition
-  setTimeout(() => card.classList.add('show'), 20);
+  // small delay to allow CSS animation/transition
+  setTimeout(() => card.classList.add('show'), 30);
 
-  // remove after timeout
+  // automatic removal with a graceful hide
+  const removeAfter = Math.max(4000, timeout);
   setTimeout(() => {
     card.classList.remove('show');
-    setTimeout(()=> { if(card.parentNode) card.parentNode.removeChild(card); }, 350);
-  }, timeout);
+    setTimeout(() => { if(card.parentNode) card.parentNode.removeChild(card); }, 420);
+  }, removeAfter);
 }
 
 function startRotation(customMessages){
@@ -425,6 +485,21 @@ function stopRotation(){
     clearInterval(rotationInterval);
     rotationInterval = null;
   }
+}
+
+// Fade out existing notifications smoothly, then remove them from DOM.
+function clearNotificationsWithFade(fadeMs = 420){
+  const container = document.getElementById('notifications');
+  if(!container) return;
+  // Remove 'show' so CSS transition plays
+  const cards = Array.from(container.children);
+  cards.forEach(card => {
+    card.classList.remove('show');
+  });
+  // Remove from DOM after the transition completes
+  setTimeout(() => {
+    if(container) container.innerHTML = '';
+  }, fadeMs + 40);
 }
 
 /* ----------------------------
@@ -470,9 +545,137 @@ function makeAlerts(results){
 }
 
 /* ----------------------------
+   Palier table (from provided image)
+   ---------------------------- */
+const palierTable = {
+  1:{duree:1, vitesse:8.5, vma:8.8, vo2:23.6, vo2kg:46.9},
+  2:{duree:2, vitesse:9.0, vma:9.5, vo2:26.6, vo2kg:49.0},
+  3:{duree:3, vitesse:9.5, vma:10.3, vo2:29.6, vo2kg:51.1},
+  4:{duree:4, vitesse:10.0, vma:11.0, vo2:32.6, vo2kg:53.1},
+  5:{duree:5, vitesse:10.5, vma:11.8, vo2:35.6, vo2kg:55.2},
+  6:{duree:6, vitesse:11.0, vma:12.5, vo2:38.6, vo2kg:57.3},
+  7:{duree:7, vitesse:11.5, vma:13.3, vo2:41.6, vo2kg:59.2},
+  8:{duree:8, vitesse:12.0, vma:14.0, vo2:44.6, vo2kg:61.5},
+  9:{duree:9, vitesse:12.5, vma:14.8, vo2:47.6, vo2kg:63.5},
+ 10:{duree:10, vitesse:13.0, vma:15.5, vo2:50.6, vo2kg:65.6},
+ 11:{duree:11, vitesse:13.5, vma:16.3, vo2:53.6, vo2kg:67.7},
+ 12:{duree:12, vitesse:14.0, vma:17.0, vo2:56.6, vo2kg:69.8},
+ 13:{duree:13, vitesse:14.5, vma:17.8, vo2:59.6, vo2kg:71.9},
+ 14:{duree:14, vitesse:15.0, vma:18.5, vo2:62.6, vo2kg:73.9},
+ 15:{duree:15, vitesse:15.5, vma:19.3, vo2:65.6, vo2kg:76.0},
+ 16:{duree:16, vitesse:16.0, vma:20.0, vo2:68.6, vo2kg:78.1},
+ 17:{duree:17, vitesse:16.5, vma:20.8, vo2:71.6, vo2kg:80.2},
+ 18:{duree:18, vitesse:17.0, vma:21.5, vo2:74.6, vo2kg:82.3},
+ 19:{duree:19, vitesse:17.5, vma:22.3, vo2:77.6, vo2kg:84.3},
+ 20:{duree:20, vitesse:18.0, vma:23.0, vo2:80.6, vo2kg:86.4}
+};
+
+// When a palier is selected we disable other inputs and use palier values only
+function applyPalierSelection(){
+  const sel = document.getElementById('palier');
+  if(!sel) return;
+  const val = sel.value;
+  const idsToDisable = ['age','fcRepos','spo2','weight','height','waist','d6','d12','p1','p2','p3'];
+
+  if(val === ''){
+    // enable all
+    idsToDisable.forEach(id => {
+      const el = document.getElementById(id);
+      if(el){ el.disabled = false; el.classList.remove('input-muted'); }
+    });
+    // remove palier extra display
+    const extra = document.getElementById('palierExtra'); if(extra) extra.remove();
+    // restore original Ruffier label if we changed it
+    const irP = document.getElementById('irText') && document.getElementById('irText').nextElementSibling;
+    if(irP && window._originalIrLabel){ irP.innerText = window._originalIrLabel; }
+    // recompute using current input values
+    computeResults(false);
+    return;
+  }
+
+  // disable other inputs (visual + actual disabled)
+  idsToDisable.forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.disabled = true; el.classList.add('input-muted'); }
+  });
+
+  // Get palier data and show relevant outputs
+  const p = palierTable[Number(val)];
+  if(!p) return;
+
+  // Clear out unrelated result fields
+  document.getElementById('bmiText').innerText = '—';
+  document.getElementById('bmiDesc').innerText = '—';
+  document.getElementById('waistText').innerText = '—';
+  document.getElementById('waistDesc').innerText = '—';
+  document.getElementById('fcText').innerText = '—';
+  document.getElementById('fcDesc').innerText = '—';
+  document.getElementById('irText').innerText = '—';
+  document.getElementById('irDesc').innerText = '—';
+
+  // repurpose the Ruffier metric label to show VO2max (mL/min/kg)
+  const irP = document.getElementById('irText') && document.getElementById('irText').nextElementSibling;
+  if(irP){
+    if(!window._originalIrLabel) window._originalIrLabel = irP.innerText;
+    irP.innerText = 'VO₂maxsp (mL/kg/min)';
+  }
+
+  // show VO2 per kg in the Ruffier slot
+  document.getElementById('irText').innerText = p.vo2kg;
+  document.getElementById('irDesc').innerText = 'VO₂max par kg — valeur sur palier';
+
+  // Use palier values for VMA / VO2 / vitesse and show duree
+  document.getElementById('vmaText').innerText = p.vma + ' km/h';
+  document.getElementById('vmaDesc').innerText = 'Palier ' + val + ' — Durée ' + p.duree + ' min — Vitesse ' + p.vitesse + ' km/h';
+
+  document.getElementById('vo2Text').innerText = p.vo2 + ' ml/kg/min';
+  document.getElementById('vo2Desc').innerText = 'Valeur palier (table)';
+
+  // add a small extra display for vitesse and duree under results (if not present)
+  let extra = document.getElementById('palierExtra');
+  if(!extra){
+    extra = document.createElement('div');
+    extra.id = 'palierExtra';
+    extra.style.textAlign = 'center';
+    extra.style.marginTop = '8px';
+    extra.style.color = '#375b7a';
+    document.getElementById('resultsCard').appendChild(extra);
+  }
+  extra.innerHTML = '<strong>Palier '+val+':</strong> Durée '+p.duree+' min — Vitesse '+p.vitesse+' km/h';
+
+  // Animate gauges to palier-provided values
+  animateGauge(document.getElementById('vmaGauge'), p.vma, 25, ['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('vo2Gauge'), p.vo2, 100, ['#ff7a2d','#fcd34d','#0b63a7']);
+  // clear other gauges visually
+  animateGauge(document.getElementById('bmiGauge'), 0, 40, ['#ff7a2d','#fcd34d','#0b63a7']);
+  animateGauge(document.getElementById('waistGauge'), 0, 140, ['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('fcGauge'), 0, 220, ['#0b63a7','#fcd34d','#ff7a2d']);
+  animateGauge(document.getElementById('irGauge'), 0, 25, ['#ff7a2d','#fcd34d','#0b63a7']);
+}
+
+// attach handler for palier select
+document.addEventListener('change', function(e){
+  if(e.target && e.target.id === 'palier'){
+    applyPalierSelection();
+  }
+});
+
+/* ----------------------------
    Main compute function (all formulas from PDF)
    ---------------------------- */
 function computeResults(showNotificationsAfterCompute = true){
+  // fade out any existing notifications before showing new ones
+  clearNotificationsWithFade();
+  // stop the automatic rotation so we don't immediately get new tips
+  stopRotation();
+  // If a palier is selected, use palier values only and do not run normal input-based calculations
+  const palSel = document.getElementById('palier');
+  if(palSel && palSel.value){
+    applyPalierSelection();
+    // after showing palier results, restart rotation after a short delay
+    setTimeout(() => startRotation(), 600);
+    return;
+  }
   // Gather inputs with safe defaults if empty
   const sex = (document.getElementById('sex').value) || 'male';
   const age = Number(document.getElementById('age').value) || 25;
@@ -552,18 +755,23 @@ function computeResults(showNotificationsAfterCompute = true){
 
   // Priority alerts
   const alerts = makeAlerts(results);
-
-  // Show immediate priority alerts (max 3)
+  // Show immediate priority alerts (max 3) after existing notifications have faded
+  const fadeDelay = 480; // slightly longer than CSS transition to ensure fade completes
   if(showNotificationsAfterCompute){
-    alerts.slice(0,3).forEach(a => showNotification(a.title, a.body, true, 9000));
+    setTimeout(() => {
+      alerts.slice(0,3).forEach(a => showNotification(a.title, a.body, true, 9000));
+    }, fadeDelay);
   }
 
   // Prepare rotation: place alerts first then general messages
-  const rotationMessages = alerts.concat(generalMessages.map(m => ({title:'Conseil santé', body:m})));
-  startRotation(rotationMessages);
-
-  // Confirm to user
-  showNotification('Calcul terminé', 'Les indicateurs ont été mis à jour.', false, 5000);
+  // Exclude the specific '30 minutes' tip from appearing immediately after a calculation
+  const rotationMessages = alerts.concat(
+    generalMessages
+      .map(m => ({title:'Conseil santé', body:m}))
+      .filter(m => !m.body.includes('30 minutes'))
+  );
+  // Start rotation after the fade so it doesn't immediately show new tips over the old ones
+  setTimeout(() => startRotation(rotationMessages), fadeDelay + 40);
 }
 
 /* ----------------------------
@@ -603,32 +811,33 @@ function clearResults(){
   const container = document.getElementById('notifications');
   container.innerHTML = '';
 }
-
-function showNotification(title, body, timeout = 8000){
-    const container = document.getElementById('notifications');
-    const card = document.createElement('div');
-    card.className = 'notification-card small';
-    card.innerHTML = '<div class="title">' + title + '</div><div class="body">' + body + '</div>';
-
-    container.appendChild(card);
-
-    // Trigger fade-in after 50ms
-    setTimeout(() => card.classList.add('show'),50);
-
-    // Trigger fade-out after "timeout"
-    setTimeout(() => {
-        card.classList.remove('show');
-        // Remove element after transition ends (450ms)
-        setTimeout(() => {
-            if (card.parentNode) container.removeChild(card);
-        },5450);
-    }, timeout);
-}
 /* ----------------------------
-   Initial start
-   ---------------------------- */
-showNotification('Bienvenue', 'Entrez vos données ou cliquez sur "Utiliser données exemple" puis "Calculer".', false, 6000);
+  Initial start
+  ---------------------------- */
 startRotation(); // start rotating generic messages
+
+// Watch notifications container and toggle a class on the results card so
+// the outer frame animates smoothly when notifications appear/disappear.
+(function(){
+  const resultsCard = document.getElementById('resultsCard');
+  const notifications = document.getElementById('notifications');
+  if(!resultsCard || !notifications) return;
+
+  function updateState(){
+    if(notifications.children.length > 0){
+      resultsCard.classList.add('notifications-visible');
+    } else {
+      resultsCard.classList.remove('notifications-visible');
+    }
+  }
+
+  // Observe additions/removals so the class toggles automatically
+  const mo = new MutationObserver(updateState);
+  mo.observe(notifications, { childList: true });
+
+  // initial state
+  updateState();
+})();
 
 </script>
 </body>
