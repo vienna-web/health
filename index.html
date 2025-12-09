@@ -7,9 +7,9 @@
 <style>
 :root{
   --blue:#0b63a7;
-  --bg:#172a3d ;
+  --bg:#3886f3 ;
   --text:#090909;
-  --muted:#375b7a;
+  --muted:#000000;
   --card:#ffffff;
   --danger:#ff4d4f;
   font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;
@@ -45,7 +45,7 @@ body{
   border-radius:50%;
   background:transparent;
   padding:0;
-  box-shadow:0 18px 40px rgba(2,18,42,0.18);
+
   transition:transform .45s cubic-bezier(.2,.9,.3,1), box-shadow .45s;
   transform-origin:center center;
   animation:floaty 6s ease-in-out infinite;
@@ -56,8 +56,6 @@ body{
   50%{ transform:translateY(-8px) rotate(1.2deg); }
   100%{ transform:translateY(0) rotate(-1deg); }
 }
-
-.top-logos img:hover{ transform:scale(1.06) rotate(0.5deg); box-shadow:0 28px 60px rgba(2,18,42,0.22);} 
 
 /* Head */
 h1{text-align:center;color:var(--blue);margin:6px 0;}
@@ -622,14 +620,29 @@ function applyPalierSelection(){
 
   // show VO2 per kg in the Ruffier slot
   document.getElementById('irText').innerText = p.vo2kg;
-  document.getElementById('irDesc').innerText = 'VO₂max par kg — valeur sur palier';
+  document.getElementById('irDesc').innerText = 'VO₂max par kg — valeur sur palier'
 
+  // repurpose the imc label to show duree 
+  const bmP = document.getElementById('bmiGauge') && document.getElementById('bmiGauge').nextElementSibling;
+  if(bmP){
+    if(!window._originalbmLabel) window._originalbmLabel = irP.innerText;
+    bmP.innerText = 'Palier ' + val + ' — Durée ' + p.duree + ' min — Vitesse ' + p.vitesse + ' km/h';
+  }
+
+// show duree  in the imc slot
+  document.getElementById('bmiGauge').innerText = p.duree + ' min';
+  document.getElementById('bmiText').innerText ='Durée  —' + p.duree + ' min';
+
+  
   // Use palier values for VMA / VO2 / vitesse and show duree
-  document.getElementById('vmaText').innerText = p.vma + ' km/h';
-  document.getElementById('vmaDesc').innerText = 'Palier ' + val + ' — Durée ' + p.duree + ' min — Vitesse ' + p.vitesse + ' km/h';
+  document.getElementById('vmaText').innerText =  'VMA  —' + p.vma + ' km/h';
+  document.getElementById('vmaDesc').innerText = 'Valeur palier (table)';
 
-  document.getElementById('vo2Text').innerText = p.vo2 + ' ml/kg/min';
+  document.getElementById('vo2Text').innerText = 'V02 max —' + p.vo2 + ' ml/kg/min';
   document.getElementById('vo2Desc').innerText = 'Valeur palier (table)';
+
+    document.getElementById('waistText').innerText = 'vitesse  —' + p.vitesse + ' km/h';
+  document.getElementById('waistDesc').innerText = 'Valeur palier (table)';
 
   // add a small extra display for vitesse and duree under results (if not present)
   let extra = document.getElementById('palierExtra');
@@ -641,7 +654,6 @@ function applyPalierSelection(){
     extra.style.color = '#375b7a';
     document.getElementById('resultsCard').appendChild(extra);
   }
-  extra.innerHTML = '<strong>Palier '+val+':</strong> Durée '+p.duree+' min — Vitesse '+p.vitesse+' km/h';
 
   // Animate gauges to palier-provided values
   animateGauge(document.getElementById('vmaGauge'), p.vma, 25, ['#0b63a7','#fcd34d','#ff7a2d']);
@@ -652,7 +664,6 @@ function applyPalierSelection(){
   animateGauge(document.getElementById('fcGauge'), 0, 220, ['#0b63a7','#fcd34d','#ff7a2d']);
   animateGauge(document.getElementById('irGauge'), 0, 25, ['#ff7a2d','#fcd34d','#0b63a7']);
 }
-
 // attach handler for palier select
 document.addEventListener('change', function(e){
   if(e.target && e.target.id === 'palier'){
